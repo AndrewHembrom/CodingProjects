@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tic Tac Toe</title>
+  <style>
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 5px;
+    }
+    
+    .cell {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 40px;
+      background-color: #eee;
+      cursor: pointer;
+    }
+    
+    .cell:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="board">
+      <div class="cell" onclick="makeMove(0, 0)"></div>
+      <div class="cell" onclick="makeMove(0, 1)"></div>
+      <div class="cell" onclick="makeMove(0, 2)"></div>
+      <div class="cell" onclick="makeMove(1, 0)"></div>
+      <div class="cell" onclick="makeMove(1, 1)"></div>
+      <div class="cell" onclick="makeMove(1, 2)"></div>
+      <div class="cell" onclick="makeMove(2, 0)"></div>
+      <div class="cell" onclick="makeMove(2, 1)"></div>
+      <div class="cell" onclick="makeMove(2, 2)"></div>
+    </div>
+  </div>
+  
+  <script>
+    let currentPlayer = 'X';
+    let gameEnded = false;
+    
+    const cells = document.querySelectorAll('.cell');
+    
+    function makeMove(row, col) {
+      if (gameEnded || cells[row * 3 + col].textContent !== '') {
+        return;
+      }
+      
+      cells[row * 3 + col].textContent = currentPlayer;
+      cells[row * 3 + col].style.cursor = 'default';
+      
+      if (checkWin()) {
+        alert(`Player ${currentPlayer} wins!`);
+        gameEnded = true;
+        return;
+      }
+      
+      if (checkTie()) {
+        alert("It's a tie!");
+        gameEnded = true;
+        return;
+      }
+      
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    }
+    
+    function checkWin() {
+      const winningCombos = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+        [0, 4, 8], [2, 4, 6] // diagonals
+      ];
+      
+      for (let combo of winningCombos) {
+        const [a, b, c] = combo;
+        
+        if (
+          cells[a].textContent !== '' &&
+          cells[a].textContent === cells[b].textContent &&
+          cells[a].textContent === cells[c].textContent
+        ) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
+    
+    function checkTie() {
+      for (let cell of cells) {
+        if (cell.textContent === '') {
+          return false;
+        }
+      }
+      
+      return true;
+    }
+  </script>
+</body>
+</html>
